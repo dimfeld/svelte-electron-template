@@ -1,20 +1,25 @@
 {
-  "name": "svelte-storybook-tailwind",
-  "author": "Jerric Lyns John",
+  "name": "svelte-electron-template",
+  "author": "Daniel Imfeld",
   "license": "MIT",
-  "version": "0.0.2",
+  "version": "0.0.1",
+  "main": "src/electron.js",
   "scripts": {
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
     "dev": "NODE_ENV=development run-p start:dev autobuild",
     "start": "sirv build --single",
-    "start:dev": "NODE_ENV=development sirv build --single --dev",
+    "start:dev": "NODE_ENV=development sirv build --single --dev -H 0.0.0.0",
     "stories": "NODE_ENV=development start-storybook",
     "build-storybook": "build-storybook -o build",
-    "static-stories": "build-storybook -c .storybook -o .out"
+    "static-stories": "build-storybook -c .storybook -o .out",
+    "electron": "run-s build pure-electron",
+    "pure-electron": "electron .",
+    "electron-dev": "run-p autobuild pure-electron-dev",
+    "pure-electron-dev": "NODE_ENV=development electron ."
   },
   "dependencies": {
-    "sirv-cli": "^0.4.4"
+    "lodash-es": "^4.17.15"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -28,8 +33,7 @@
     "@babel/preset-typescript": "^7.9.0",
     "@babel/runtime": "^7.9.0",
     "@fullhuman/postcss-purgecss": "^1.3.0",
-    "@rollup/plugin-commonjs": "^11.1.0",
-    "@rollup/plugin-html": "^0.1.1",
+    "@rollup/plugin-commonjs": "~11.0.0",
     "@rollup/plugin-node-resolve": "^7.1.3",
     "@storybook/addon-a11y": "^5.2.1",
     "@storybook/addon-actions": "^5.2.1",
@@ -43,9 +47,12 @@
     "autoprefixer": "^9.6.1",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
+    "chokidar": "^3.3.1",
+    "electron": "^8.2.3",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-svelte3": "^2.7.3",
+    "lodash": "^4.17.15",
     "npm-run-all": "^4.1.5",
     "postcss": "^7.0.18",
     "postcss-cli": "^6.1.3",
@@ -59,6 +66,7 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^5.1.2",
+    "sirv-cli": "^0.4.4",
     "svelte": "^3.20.1",
     "svelte-loader": "^2.13.6",
     "svelte-preprocess": "^3.1.1",

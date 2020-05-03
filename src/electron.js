@@ -1,31 +1,42 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const contextMenu = require('electron-context-menu');
+const { ipcMain: ipc } = require('electron-better-ipc');
+const logger = require('electron-timber');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
-let watcher;
+let renderWatcher;
 if (process.env.NODE_ENV === 'development') {
-  watcher = require('chokidar').watch(
+  try {
+    require('electron-reloader')(module);
+  } catch (_) {}
+
+  renderWatcher = require('chokidar').watch(
     path.join(__dirname, '../build/bundle.js'),
     { ignoreInitial: true }
   );
-  watcher.on('change', () => {
+  renderWatcher.on('change', () => {
     mainWindow && mainWindow.reload();
   });
 }
 
+contextMenu();
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 680,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+    },
   });
 
   mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
   mainWindow.on('closed', () => {
-    if (watcher) {
-      watcher.close();
+    if (renderWatcher) {
+      renderWatcher.close();
     }
     mainWindow = null;
   });
